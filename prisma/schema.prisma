@@ -1,0 +1,353 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+
+// a tener en cuenta id_nombre es la clave primaria y nombreId es una clave foranea en la tabla
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+  binaryTargets = ["debian-openssl-1.1.x", "debian-openssl-3.0.x", "native", "windows"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// preguntar sobre este Plan Maestro 
+/* model PlanMaestro1 {
+  id_PlanMaestro          Int      @id @default(autoincrement())
+  nombre      String   @db.VarChar(255)
+  descripcion String   @db.VarChar(255) @default("")
+  fechaInicio DateTime @db.Timestamptz(6) @default(now())
+  fechaFin    DateTime @db.Timestamptz(6) @default(now())
+  id_Usuario Int    
+  id_Proyecto Int    
+
+  esActivo    Boolean  @default(true)
+  createdAt   DateTime @db.Timestamptz(6) @default(now()) // fecha de creacion
+  updatedAt   DateTime @db.Timestamptz(6) @default(now()) // fecha de actualizacion
+
+  planMaestroPartidaVivienda  PlanMaestroPartidaVivienda[]
+}
+
+model PlanMaestroPartidaVivienda {
+  id_PlanMaestroPartidaVivienda            Int      @id @default(autoincrement())
+  idPlanMaestro Int
+  idPartida    Int
+  idVivienda    Int
+  fechaIni      DateTime @db.Timestamptz(6) @default(now())
+  fechaFin      DateTime @db.Timestamptz(6) @default(now())
+  esActivo    Boolean  @default(true)
+  createdAt   DateTime @db.Timestamptz(6) @default(now())
+  updatedAt   DateTime @db.Timestamptz(6) @default(now())
+
+  planMaestro1 PlanMaestro1 @relation(fields: [idPlanMaestro], references: [id_PlanMaestro])
+
+  @@index([idPlanMaestro])
+}
+
+
+model Tarea {
+  id_Tarea Int @id @default(autoincrement())
+  nombre String @db.VarChar(255)
+  descripcion String @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tareaEstado TareaEstado @relation(fields: [tareaEstadoId], references: [id_TareaEstado])
+  tareaEstadoId Int
+
+  tareaPrioridad TareaPrioridad @relation(fields: [tareaPrioridadId], references: [id_TareaPrioridad])
+  tareaPrioridadId Int
+}
+
+model TareaEstado {
+  id_TareaEstado Int @id @default(autoincrement())
+  nombre String @db.VarChar(255)
+  descripcion String @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tareas Tarea[]
+}
+
+model TareaPrioridad {
+  id_TareaPrioridad Int @id @default(autoincrement())
+  nombre String @db.VarChar(255)
+  descripcion String @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tareas Tarea[]
+}
+
+model Objetivo {
+  id_Objetivo Int @id @default(autoincrement())
+  nombre String @db.VarChar(255)
+  descripcion String @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+ */
+
+
+
+
+ // PARTIDAS 
+
+model Hito {
+  id_Hito Int @id @default(autoincrement())
+  nombre String @db.VarChar(255)
+  descripcion String @db.VarChar(255)
+  esActivo Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  partida Partida[]
+}
+
+model PaqueteTrabajo {
+  id_PaqueteTrabajo Int @id @default(autoincrement())
+  nombre String @db.VarChar(255)
+  descripcion String @db.VarChar(255)
+  esActivo Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  partida Partida[]
+}
+
+model Partida {
+  id_Partida Int @id @default(autoincrement())
+  nombre String @db.VarChar(255)
+  medida String @db.VarChar(255)
+  ritmo String @db.VarChar(255)
+  cuadrillasSugeridas Int
+  
+  hito Hito @relation(fields: [hitoId], references: [id_Hito])
+  hitoId Int
+
+  procesoConstrutivo ProcesoConstrutivo @relation(fields: [procesoConstrutivoId], references: [id_ProcesoConstrutivo])
+  procesoConstrutivoId Int
+
+  paqueteTrabajo PaqueteTrabajo @relation(fields: [paqueteTrabajoId], references: [id_PaqueteTrabajo])
+  paqueteTrabajoId Int
+
+  pmFrentePartidas PmFrentePartida[]
+  planSemanalPartida PlanSemanalPartida[]
+}
+
+model ProcesoConstrutivo {
+  id_ProcesoConstrutivo Int @id @default(autoincrement())
+  nombre String @db.VarChar(255)
+  descripcion String @db.VarChar(255)
+  jerarquia Int
+  esActivo Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  partida Partida[] // es para relacionar con la tabla partidas
+}
+
+// PLAN MAESTRO
+
+model PlanMaestro {
+  id_PlanMaestro Int @id @default(autoincrement())
+  descripcion String @db.VarChar(255)
+
+  fechaInicio DateTime @db.Timestamptz(6) @default(now())
+  
+  
+
+  proyecto Proyecto @relation(fields: [proyectoId], references: [id_Proyecto])
+  proyectoId Int
+
+  equipoTrabajos EquipoTrabajo[]
+  pmFrentes PmFrente[]
+}
+
+model PmFrente {
+  id_PmFrente Int @id @default(autoincrement())
+
+  planMaestro PlanMaestro @relation(fields: [planMaestroId], references: [id_PlanMaestro])
+  planMaestroId Int 
+
+  nombre String @db.VarChar(255)
+
+  pmFrentePartidas PmFrentePartida[]
+  planSemanal PlanSemanal[]
+}
+
+model PmFrentePartida {
+
+  id_PmFrentePartida Int @id @default(autoincrement())
+
+  partida Partida @relation(fields: [partidaId], references: [id_Partida])
+  partidaId Int
+
+  cuadrilla Int 
+
+  frente PmFrente @relation(fields: [frenteId], references: [id_PmFrente])
+  frenteId Int
+
+  orden Int
+
+
+  pmProgramacion PmProgramacion[]
+}
+
+model PmProgramacion {
+  id_PmProgramacion Int @id @default(autoincrement())
+  
+  vivienda Vivienda @relation(fields: [viviendaId], references: [id_Vivienda])
+  viviendaId Int
+
+  fechaInicio DateTime @db.Timestamptz(6) @default(now())
+  fechaFin DateTime @db.Timestamptz(6) @default(now())
+  cantidad Int
+
+  pmFrentePartida PmFrentePartida @relation(fields: [pmFrentePartidaId], references: [id_PmFrentePartida])
+  pmFrentePartidaId Int
+ 
+}
+
+// USUARIOS
+
+model EquipoCargo {
+  id_EquipoCargo Int @id @default(autoincrement())
+  nombre String @db.VarChar(255)
+  esActivo Boolean @default(true)
+
+  pmEquipo PmEquipo[]
+}
+
+model EquipoTrabajo {
+  id_EquipoTrabajo Int @id @default(autoincrement())
+
+  PlanMaestro PlanMaestro @relation(fields: [planMaestroId], references: [id_PlanMaestro])
+  planMaestroId Int // clave foranea de plan maestro
+
+  pmEquipo PmEquipo[]
+}
+
+model PmEquipo {  
+  id_PmEquipo Int @id @default(autoincrement()) // si la borro deja de funcionar 
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id_Usuario])
+  usuarioId Int
+
+  equipoTrabajo EquipoTrabajo @relation(fields: [equipoTrabajoId], references: [id_EquipoTrabajo])
+  equipoTrabajoId Int
+
+  equipoCargo EquipoCargo @relation(fields: [equipoCargoId], references: [id_EquipoCargo])
+  equipoCargoId Int
+}
+
+model Usuario {
+  id_Usuario Int @id @default(autoincrement())
+  nombre String @db.VarChar(255)
+
+  pmEquipo PmEquipo[]
+
+  planSemanalPartida PlanSemanalPartida[]
+}
+
+
+
+
+
+
+// VIVIENDA
+
+model ModeloVivienda{
+  id_ModeloVivienda Int @id @default(autoincrement())
+  nombre String @db.VarChar(255)
+  activo Boolean @default(true)
+
+  vivienda Vivienda[]
+}
+
+model Proyecto {
+  id_Proyecto Int @id @default(autoincrement())
+  nombre String @db.VarChar(255)
+  activo Boolean @default(true)
+
+  planMaestro PlanMaestro[]
+
+  
+}
+
+model Vivienda {
+  id_Vivienda Int @id @default(autoincrement())
+  numero String @db.VarChar(255)
+
+  id_Frente String // id frente o lado  puede ser lado a o b  
+
+  modeloVivienda ModeloVivienda @relation(fields: [modeloViviendaId], references: [id_ModeloVivienda])
+  modeloViviendaId Int
+
+  planSemanalPartida PlanSemanalPartida[]
+  pmProgramacion PmProgramacion[]
+}
+  
+
+
+
+// PLAN SEMANAL
+
+model PlanSemanal {
+  id_PlanSemanal Int @id @default(autoincrement())
+  descripcion String @db.VarChar(255)
+  fechaInicio DateTime @db.Timestamptz(6) @default(now())
+  fechaTermino DateTime @db.Timestamptz(6) @default(now())
+
+  pmFrente PmFrente @relation(fields: [pmFrenteId], references: [id_PmFrente])
+  pmFrenteId Int
+}
+
+model PlanSemanalPartida {
+
+  id_PlanSemanalPartida Int @id @default(autoincrement())
+
+  partida Partida @relation(fields: [partidaId], references: [id_Partida])
+  partidaId Int
+
+  vivienda Vivienda @relation(fields: [viviendaId], references: [id_Vivienda])
+  viviendaId Int
+
+
+  revisionOk Boolean @default(false)
+  id_UsuarioRevision Int
+  fechaRevision DateTime @db.Timestamptz(6) @default(now())
+
+  causaNoCumplimiento CausaNoCumplimiento @relation(fields: [causaNoCumplimientoId], references: [id_CausaNoCumplimiento])
+  causaNoCumplimientoId Int 
+
+  observacion String @db.VarChar(255)
+
+  responsable Usuario @relation(fields: [responsableId], references: [id_Usuario])
+  responsableId Int // clave foranea de usuario 
+
+  cantidadProgramada Decimal @db.Decimal(10,2) // Ejemplo: 99999999.99
+  cantidadEjecutada Decimal @db.Decimal(10,2) // Ejemplo: 99999999.99
+
+  id_Cuadrilla Int // posible clave foranea
+
+
+} 
+
+
+// CAUSA NO CUMPLIMIENTO
+
+model CausaNoCumplimiento {
+  id_CausaNoCumplimiento Int @id @default(autoincrement())
+  nombre String @db.VarChar(255)
+  esActivo Boolean @default(true) 
+
+  planSemanalPartida PlanSemanalPartida[]
+}

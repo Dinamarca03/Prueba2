@@ -18,15 +18,15 @@ import { PmFrenteModule } from './Plan_Maestro/pm_frente/pm_frente.module';
 import { PmFrentePartidaModule } from './Plan_Maestro/pm_frente_partida/pm_frente_partida.module';
 import { PmProgramacionModule } from './Plan_Maestro/pm_programacion/pm_programacion.module';
 import { ApiMalpoModule } from './api-malpo/api-malpo.module';
+import { RyMModule } from './RyM_api/RyM.module';
 import { PlanSemanalModule } from './Plan_Semanal/plan_semanal/plan_semanal.module';
 import { PlanSemanalPartidaModule } from './Plan_Semanal/plan_semanal_partida/plan_semanal_partida.module';
 import { CausaNoCumplimientoModule } from './causa_no_cumplimiento/causa_no_cumplimiento.module';
-import { RyMModule } from './RyM_api/RyM.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-  
+    RyMModule,
     PrismaModule,
     HitoModule,
     ProcesoConstructivoModule,

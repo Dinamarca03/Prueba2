@@ -21,6 +21,7 @@ import { ApiMalpoModule } from './api-malpo/api-malpo.module';
 import { PlanSemanalModule } from './Plan_Semanal/plan_semanal/plan_semanal.module';
 import { PlanSemanalPartidaModule } from './Plan_Semanal/plan_semanal_partida/plan_semanal_partida.module';
 import { CausaNoCumplimientoModule } from './causa_no_cumplimiento/causa_no_cumplimiento.module';
+import { RyMModule } from './RyM_api/RyM.module';
 
 @Module({
   imports: [
@@ -44,7 +45,8 @@ import { CausaNoCumplimientoModule } from './causa_no_cumplimiento/causa_no_cump
     ApiMalpoModule, // Agrega el módulo de la api de Malpo
     PlanSemanalModule,
     PlanSemanalPartidaModule,
-    CausaNoCumplimientoModule 
+    CausaNoCumplimientoModule,
+    RyMModule // api de prueba
   ],
   controllers: [],
   providers: [

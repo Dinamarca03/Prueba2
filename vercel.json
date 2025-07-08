@@ -8,7 +8,7 @@
   ],
   "routes": [
     {
-      "src": "/RyM/(.*)",
+      "src": "/RyM_api/(.*)",
       "dest": "/dist/main.js"
     },
     {

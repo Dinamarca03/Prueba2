@@ -271,7 +271,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\Javier Dinamarca\\Desktop\\Prueba\\last-planner-master\\generated\\prisma",
+      "value": "C:\\Users\\Javier Dinamarca\\Desktop\\Prueba - copia\\last-planner-master\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -297,7 +297,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\Javier Dinamarca\\Desktop\\Prueba\\last-planner-master\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\Javier Dinamarca\\Desktop\\Prueba - copia\\last-planner-master\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {

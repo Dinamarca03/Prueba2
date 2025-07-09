@@ -1,15 +1,22 @@
-import { Injectable, OnModuleInit, INestApplication } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '../../generated/prisma';
 
-@Injectable()
-export class PrismaService extends PrismaClient implements OnModuleInit {
-  async onModuleInit() {
-    await this.$connect();
-  }
+// Implementación singleton para Prisma en entornos serverless
+let prisma: PrismaClient;
 
-  async enableShutdownHooks(app: INestApplication) {
-    process.on('beforeExit', async () => {
-      await app.close();
-    });
+function getPrismaClient() {
+  if (!prisma) {
+    prisma = new PrismaClient();
+  }
+  return prisma;
+}
+
+@Injectable()
+export class PrismaService extends PrismaClient {
+  constructor() {
+    // Usar la instancia singleton
+    super();
+    const singleton = getPrismaClient();
+    Object.assign(this, singleton);
   }
 }
